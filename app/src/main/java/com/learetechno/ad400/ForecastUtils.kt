@@ -14,7 +14,7 @@ fun formatTempForDisplay(temp : Float, tempDisplaySetting: TempDisplaySetting) :
     }
 }
 
-public fun showTempDisplaySettingDialog(context: Context, tempDisplaySettingsManager: TempDisplaySettingsManager){
+ fun showTempDisplaySettingDialog(context: Context, tempDisplaySettingsManager: TempDisplaySettingsManager){
     val dialogBuilder = AlertDialog.Builder(context)
     dialogBuilder.apply {
         setTitle("Choose Display Units")

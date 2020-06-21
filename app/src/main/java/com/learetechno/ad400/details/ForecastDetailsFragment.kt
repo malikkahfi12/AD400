@@ -1,50 +1,36 @@
 package com.learetechno.ad400.details
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.TextView
-import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
-import com.learetechno.ad400.*
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.navArgs
+import com.learetechno.ad400.R
+import com.learetechno.ad400.TempDisplaySettingsManager
+import com.learetechno.ad400.formatTempForDisplay
 
-class ForecastDetailsActivity : AppCompatActivity() {
+class ForecastDetailsFragment : Fragment() {
 
+    private val args:ForecastDetailsFragmentArgs by navArgs()
     private lateinit var tempDisplaySettingsManager: TempDisplaySettingsManager
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_forecast_details)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        val layout = inflater.inflate(R.layout.fragment_forecast_details, container, false)
 
-        tempDisplaySettingsManager = TempDisplaySettingsManager(this)
+        tempDisplaySettingsManager = TempDisplaySettingsManager(requireContext())
 
-        setTitle(R.string.forecast_details)
+        val tempText = layout.findViewById<TextView>(R.id.tempText)
+        val descriptionText = layout.findViewById<TextView>(R.id.descriptionText)
 
-        val tempText = findViewById<TextView>(R.id.tempText)
-        val descriptionText = findViewById<TextView>(R.id.descriptionText)
+        tempText.text = formatTempForDisplay(args.temp, tempDisplaySettingsManager.getTempDisplaySetting())
+        descriptionText.text = args.description
 
-        val temp = intent.getFloatExtra("key_temp", 0f)
-        tempText.text = formatTempForDisplay(temp, tempDisplaySettingsManager.getTempDisplaySetting())
-        descriptionText.text = intent.getStringExtra("key_description")
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        val inflater : MenuInflater = menuInflater
-        inflater.inflate(R.menu.settings_menu, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // Handle item selection
-        return when(item.itemId){
-            R.id.tempDisplaySettings -> {
-                // do something
-                showTempDisplaySettingDialog(this, tempDisplaySettingsManager)
-                return true
-            }
-            else -> super.onOptionsItemSelected(item)
-        }
+        return layout
     }
 }
